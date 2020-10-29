@@ -1,0 +1,983 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>20-单一职责原则：你的模块到底为谁负责？</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <style>
+        html {
+            color: #333;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-rendering: optimizelegibility;
+            font-family: Helvetica Neue, PingFang SC, Verdana, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif
+        }
+
+        html.borderbox *,
+        html.borderbox :after,
+        html.borderbox :before {
+            box-sizing: border-box
+        }
+
+        article,
+        aside,
+        blockquote,
+        body,
+        button,
+        code,
+        dd,
+        details,
+        dl,
+        dt,
+        fieldset,
+        figcaption,
+        figure,
+        footer,
+        form,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        header,
+        hr,
+        input,
+        legend,
+        li,
+        menu,
+        nav,
+        ol,
+        p,
+        pre,
+        section,
+        td,
+        textarea,
+        th,
+        ul {
+            margin: 0;
+            padding: 0
+        }
+
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        menu,
+        nav,
+        section {
+            display: block
+        }
+
+        audio,
+        canvas,
+        video {
+            display: inline-block
+        }
+
+        body,
+        button,
+        input,
+        select,
+        textarea {
+            font: 300 1em/1.8 PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, Helvetica, sans-serif
+        }
+
+        button::-moz-focus-inner,
+        input::-moz-focus-inner {
+            padding: 0;
+            border: 0
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0
+        }
+
+        fieldset,
+        img {
+            border: 0
+        }
+
+        blockquote {
+            position: relative;
+            color: #999;
+            font-weight: 400;
+            border-left: 1px solid #1abc9c;
+            padding-left: 1em;
+            margin: 1em 3em 1em 2em
+        }
+
+        @media only screen and (max-width: 640px) {
+            blockquote {
+                margin: 1em 0
+            }
+        }
+
+        abbr,
+        acronym {
+            border-bottom: 1px dotted;
+            font-variant: normal
+        }
+
+        abbr {
+            cursor: help
+        }
+
+        del {
+            text-decoration: line-through
+        }
+
+        address,
+        caption,
+        cite,
+        code,
+        dfn,
+        em,
+        th,
+        var {
+            font-style: normal;
+            font-weight: 400
+        }
+
+        ol,
+        ul {
+            list-style: none
+        }
+
+        caption,
+        th {
+            text-align: left
+        }
+
+        q:after,
+        q:before {
+            content: ""
+        }
+
+        sub,
+        sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative
+        }
+
+        :root sub,
+        :root sup {
+            vertical-align: baseline
+        }
+
+        sup {
+            top: -.5em
+        }
+
+        sub {
+            bottom: -.25em
+        }
+
+        a {
+            color: #1abc9c
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        .typo a {
+            border-bottom: 1px solid #1abc9c
+        }
+
+        .typo a:hover {
+            border-bottom-color: #555;
+            color: #555
+        }
+
+        .typo a:hover,
+        a,
+        ins {
+            text-decoration: none
+        }
+
+        .typo-u,
+        u {
+            text-decoration: underline
+        }
+
+        mark {
+            background: #fffdd1;
+            border-bottom: 1px solid #ffedce;
+            padding: 2px;
+            margin: 0 5px
+        }
+
+        code,
+        pre,
+        pre tt {
+            font-family: Courier, Courier New, monospace
+        }
+
+        pre {
+            background: hsla(0, 0%, 97%, .7);
+            border: 1px solid #ddd;
+            padding: 1em 1.5em;
+            display: block;
+            -webkit-overflow-scrolling: touch
+        }
+
+        hr {
+            border: none;
+            border-bottom: 1px solid #cfcfcf;
+            margin-bottom: .8em;
+            height: 10px
+        }
+
+        .typo-small,
+        figcaption,
+        small {
+            font-size: .9em;
+            color: #888
+        }
+
+        b,
+        strong {
+            font-weight: 700;
+            color: #000
+        }
+
+        [draggable] {
+            cursor: move
+        }
+
+        .clearfix:after,
+        .clearfix:before {
+            content: "";
+            display: table
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+
+        .clearfix {
+            zoom: 1
+        }
+
+        .textwrap,
+        .textwrap td,
+        .textwrap th {
+            word-wrap: break-word;
+            word-break: break-all
+        }
+
+        .textwrap-table {
+            table-layout: fixed
+        }
+
+        .serif {
+            font-family: Palatino, Optima, Georgia, serif
+        }
+
+        .typo-dl,
+        .typo-form,
+        .typo-hr,
+        .typo-ol,
+        .typo-p,
+        .typo-pre,
+        .typo-table,
+        .typo-ul,
+        .typo dl,
+        .typo form,
+        .typo hr,
+        .typo ol,
+        .typo p,
+        .typo pre,
+        .typo table,
+        .typo ul,
+        blockquote {
+            margin-bottom: 1rem
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: PingFang SC, Helvetica Neue, Verdana, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+            color: #000;
+            line-height: 1.35
+        }
+
+        .typo-h1,
+        .typo-h2,
+        .typo-h3,
+        .typo-h4,
+        .typo-h5,
+        .typo-h6,
+        .typo h1,
+        .typo h2,
+        .typo h3,
+        .typo h4,
+        .typo h5,
+        .typo h6 {
+            margin-top: 1.2em;
+            margin-bottom: .6em;
+            line-height: 1.35
+        }
+
+        .typo-h1,
+        .typo h1 {
+            font-size: 2em
+        }
+
+        .typo-h2,
+        .typo h2 {
+            font-size: 1.8em
+        }
+
+        .typo-h3,
+        .typo h3 {
+            font-size: 1.6em
+        }
+
+        .typo-h4,
+        .typo h4 {
+            font-size: 1.4em
+        }
+
+        .typo-h5,
+        .typo-h6,
+        .typo h5,
+        .typo h6 {
+            font-size: 1.2em
+        }
+
+        .typo-ul,
+        .typo ul {
+            margin-left: 1.3em;
+            list-style: disc
+        }
+
+        .typo-ol,
+        .typo ol {
+            list-style: decimal;
+            margin-left: 1.9em
+        }
+
+        .typo-ol ol,
+        .typo-ol ul,
+        .typo-ul ol,
+        .typo-ul ul,
+        .typo li ol,
+        .typo li ul {
+            margin-bottom: .8em;
+            margin-left: 2em
+        }
+
+        .typo-ol ul,
+        .typo-ul ul,
+        .typo li ul {
+            list-style: circle
+        }
+
+        .typo-table td,
+        .typo-table th,
+        .typo table caption,
+        .typo table td,
+        .typo table th {
+            border: 1px solid #ddd;
+            padding: .5em 1em;
+            color: #666
+        }
+
+        .typo-table th,
+        .typo table th {
+            background: #fbfbfb
+        }
+
+        .typo-table thead th,
+        .typo table thead th {
+            background: hsla(0, 0%, 95%, .7)
+        }
+
+        .typo table caption {
+            border-bottom: none
+        }
+
+        .typo-input,
+        .typo-textarea {
+            -webkit-appearance: none;
+            border-radius: 0
+        }
+
+        .typo-em,
+        .typo em,
+        caption,
+        legend {
+            color: #000;
+            font-weight: inherit
+        }
+
+        .typo-em {
+            position: relative
+        }
+
+        .typo-em:after {
+            position: absolute;
+            top: .65em;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            content: "\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB"
+        }
+
+        .typo img {
+            max-width: 100%
+        }
+
+        .common-content {
+            font-weight: 400;
+            color: #353535;
+            line-height: 1.75rem;
+            white-space: normal;
+            word-break: normal;
+            font-size: 1rem
+        }
+
+        .common-content img {
+            display: block;
+            max-width: 100%;
+            background-color: #eee
+        }
+
+        .common-content audio,
+        .common-content video {
+            width: 100%;
+            background-color: #eee
+        }
+
+        .common-content center,
+        .common-content font {
+            margin-top: 1rem;
+            display: inline-block
+        }
+
+        .common-content center {
+            width: 100%
+        }
+
+        .common-content pre {
+            margin-top: 1rem;
+            padding-left: 0;
+            padding-right: 0;
+            position: relative;
+            overflow: hidden
+        }
+
+        .common-content pre code {
+            font-size: .8rem;
+            font-family: Consolas, Liberation Mono, Menlo, monospace, Courier;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            overflow-x: auto
+        }
+
+        .common-content hr {
+            border: none;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-top: 1px solid #f5f5f5;
+            height: 1px;
+            background: none
+        }
+
+        .common-content b,
+        .common-content h1,
+        .common-content h2,
+        .common-content h3,
+        .common-content h4,
+        .common-content h5,
+        .common-content strong {
+            font-weight: 700
+        }
+
+        .common-content h1,
+        .common-content h2 {
+            font-size: 1.125rem;
+            margin-bottom: .45rem
+        }
+
+        .common-content h3,
+        .common-content h4,
+        .common-content h5 {
+            font-size: 1rem;
+            margin-bottom: .45rem
+        }
+
+        .common-content p {
+            font-weight: 400;
+            color: #353535;
+            margin-top: .15rem
+        }
+
+        .common-content .orange {
+            color: #ff5a05
+        }
+
+        .common-content .reference {
+            font-size: 1rem;
+            color: #888
+        }
+
+        .custom-rich-content h1 {
+            margin-top: 0;
+            font-weight: 400;
+            font-size: 15.25px;
+            border-bottom: 1px solid #eee;
+            line-height: 2.8
+        }
+
+        .custom-rich-content li,
+        .custom-rich-content p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.6
+        }
+
+        table.hljs-ln {
+            margin-bottom: 0;
+            border-spacing: 0;
+            border-collapse: collapse
+        }
+
+        table.hljs-ln,
+        table.hljs-ln tbody,
+        table.hljs-ln td,
+        table.hljs-ln tr {
+            box-sizing: border-box
+        }
+
+        table.hljs-ln td {
+            padding: 0;
+            border: 0
+        }
+
+        table.hljs-ln td.hljs-ln-numbers {
+            min-width: 15px;
+            color: rgba(27, 31, 35, .3);
+            text-align: right;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none
+        }
+
+        table.hljs-ln td.hljs-ln-code,
+        table.hljs-ln td.hljs-ln-numbers {
+            font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+            font-size: 12px;
+            line-height: 20px;
+            vertical-align: top
+        }
+
+        table.hljs-ln td.hljs-ln-code {
+            position: relative;
+            padding-right: 10px;
+            padding-left: 10px;
+            overflow: visible;
+            color: #24292e;
+            word-wrap: normal;
+            white-space: pre
+        }
+
+        video::-webkit-media-controls {
+            overflow: hidden !important
+        }
+
+        video::-webkit-media-controls-enclosure {
+            width: calc(100% + 32px);
+            margin-left: auto
+        }
+
+        ._29HP61GA_0 {
+            max-width:800px;
+            margin:0 auto;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: #353535;
+            line-height: 1.76;
+            white-space: normal;
+            word-break: normal;
+            font-size: 17px;
+            -webkit-transition: background-color .3s ease;
+            transition: background-color .3s ease
+        }
+
+        ._29HP61GA_0 .MathJax_Display {
+            overflow: auto
+        }
+
+        ._29HP61GA_0 .poster {
+            position: fixed;
+            left: -10000px;
+            top: -10000px;
+            overflow: hidden;
+            padding: 1rem;
+            background: #ececec
+        }
+
+        ._29HP61GA_0 .richcontent-pre-copy {
+            font-size: 13px;
+            color: #888;
+            position: absolute;
+            right: 1em;
+            top: .5em;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        ._29HP61GA_0 .richcontent-pre-copy .iconfont {
+            font-size: 12px;
+            margin-right: .2em
+        }
+
+        ._29HP61GA_0 a {
+            color: #fa8919;
+            border-bottom: 1px solid #fa8919
+        }
+
+        ._29HP61GA_0 img {
+            display: block;
+            max-width: 100%;
+            position: relative;
+            left: 50%;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+            background-color: #eee;
+            vertical-align: top;
+            border-radius: 0
+        }
+
+        ._29HP61GA_0 audio,
+        ._29HP61GA_0 video {
+            width: 100%;
+            background-color: #eee
+        }
+
+        ._29HP61GA_0 pre {
+            margin-top: 16px;
+            padding: 34px 0 0;
+            margin-bottom: 30px;
+            position: relative;
+            border-radius: 6px;
+            background: rgba(246, 247, 251, .749);
+            border: 0
+        }
+
+        ._29HP61GA_0 pre code {
+            font-size: 12px;
+            font-family: Consolas, Liberation Mono, Menlo, monospace, Courier;
+            display: block;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            margin-left: 16px;
+            margin-right: 16px;
+            overflow-x: scroll
+        }
+
+        ._29HP61GA_0 pre code:after {
+            content: "";
+            height: 30px;
+            width: 100%;
+            display: block
+        }
+
+        ._29HP61GA_0 hr {
+            border: none;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-top: 1px solid #f5f5f5;
+            height: 1px;
+            background: none
+        }
+
+        ._29HP61GA_0 h1,
+        ._29HP61GA_0 h2,
+        ._29HP61GA_0 h3,
+        ._29HP61GA_0 h4,
+        ._29HP61GA_0 h5 {
+            margin-bottom: 20px;
+            margin-top: 0;
+            font-weight: 700
+        }
+
+        ._29HP61GA_0 b,
+        ._29HP61GA_0 strong {
+            font-weight: 700
+        }
+
+        ._29HP61GA_0 h1 {
+            font-size: 21px
+        }
+
+        ._29HP61GA_0 h2 {
+            font-size: 20px
+        }
+
+        ._29HP61GA_0 h3 {
+            font-size: 19px
+        }
+
+        ._29HP61GA_0 h4 {
+            font-size: 18px
+        }
+
+        ._29HP61GA_0 h5 {
+            font-size: 17px
+        }
+
+        ._29HP61GA_0 center,
+        ._29HP61GA_0 p {
+            font-weight: 400;
+            color: #353535;
+            margin-top: 0;
+            margin-bottom: 30px;
+            word-break: break-word
+        }
+
+        ._29HP61GA_0 center {
+            text-align: center
+        }
+
+        ._29HP61GA_0 blockquote {
+            margin-top: 0;
+            margin-bottom: 34px;
+            border-left: 3px solid #e8e8e8;
+            padding-left: 17px;
+            color: #353535
+        }
+
+        ._29HP61GA_0 blockquote p {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+
+        ._29HP61GA_0 ol,
+        ._29HP61GA_0 ul {
+            margin-bottom: 30px
+        }
+
+        ._29HP61GA_0 ol p,
+        ._29HP61GA_0 ul p {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+
+        ._29HP61GA_0 ol {
+            list-style: decimal;
+            margin-left: 20px
+        }
+
+        ._29HP61GA_0 ul li {
+            padding-left: 17px;
+            position: relative;
+            margin-bottom: 10px
+        }
+
+        ._29HP61GA_0 ul li:after {
+            content: "";
+            height: 6px;
+            width: 6px;
+            border-radius: 50%;
+            background: #353535;
+            position: absolute;
+            top: 10px;
+            left: 0
+        }
+
+        ._29HP61GA_0 .orange {
+            color: #fa8919
+        }
+
+        ._29HP61GA_0 .reference {
+            color: #888
+        }
+
+        ._29HP61GA_0 .m-right {
+            text-align: right
+        }
+
+        ._29HP61GA_0 .m-center {
+            text-align: center;
+            display: block
+        }
+
+        ._29HP61GA_0 .m-gray {
+            color: #888
+        }
+
+        ._29HP61GA_0 .m-small {
+            font-size: 15px
+        }
+
+        ._29HP61GA_0 table.hljs-ln {
+            margin-bottom: 0;
+            border-spacing: 0;
+            border-collapse: collapse
+        }
+
+        ._29HP61GA_0 table.hljs-ln,
+        ._29HP61GA_0 table.hljs-ln tbody,
+        ._29HP61GA_0 table.hljs-ln td,
+        ._29HP61GA_0 table.hljs-ln tr {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box
+        }
+
+        ._29HP61GA_0 table.hljs-ln td {
+            padding: 0;
+            border: 0
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-numbers {
+            min-width: 15px;
+            font-size: 12px;
+            color: rgba(27, 31, 35, .3);
+            text-align: right;
+            white-space: nowrap;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-code,
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-numbers {
+            font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+            line-height: 20px;
+            vertical-align: top
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-code {
+            position: relative;
+            padding-right: 10px;
+            padding-left: 10px;
+            overflow: visible;
+            font-size: 13px;
+            color: #666;
+            word-wrap: normal;
+            white-space: pre
+        }
+
+    </style>
+</head>
+<body>
+<div class="_29HP61GA_0">
+<h1>20-单一职责原则：你的模块到底为谁负责？</h1>
+<p>你好！我是郑晔。</p><p>经过前面的讲解，我们对各种编程范式已经有了基本的理解，也知道了自己手上有哪些可用的设计元素。但只有这些元素是不够的，我们还需要一些比编程范式更具体的内容来指导工作。从这一讲开始，我们就进入到设计原则的学习。</p><p>在众多的原则中，我们该学习哪个呢？我选择了SOLID原则，因为SOLID原则是一套比较成体系的设计原则。它不仅可以指导我们设计模块（在面向对象领域，模块主要指的就是类），还可以被当作一把尺子，来衡量我们设计的有效性。</p><p>那SOLID原则是什么呢？它实际上是五个设计原则首字母的缩写，它们分别是：</p><ul>
+<li>单一职责原则（Single responsibility principle，SRP）</li>
+<li>开放封闭原则（Open–closed principle，OCP）</li>
+<li>Liskov替换原则（Liskov substitution principle，LSP）</li>
+<li>接口隔离原则（Interface segregation principle，ISP）</li>
+<li>依赖倒置原则（Dependency inversion principle，DIP）</li>
+</ul><p>这些设计原则是由Robert Martin提出并逐步整理和完善的。他在《<a href="http://book.douban.com/subject/1140457/">敏捷软件开发：原则、实践与模式</a>》和《<a href="http://book.douban.com/subject/30333919/">架构整洁之道</a>》两本书中，对SOLID原则进行了两次比较完整的阐述。在这两本时隔近20年的书里，你可以看到Robert Martin对SOLID原则的理解一步步在深化，如果你想了解原作者的思考，这两本书都推荐你阅读。</p><!-- [[[read_end]]] --><p>那么，在接下来的几讲中，我就来给你讲解这五个设计原则，除了设计原则的基本内容之外，我还会把我自己的理解增补其中，把两本书中没有讲到的一些逻辑给你补充进去。</p><p>好，我们开始，率先登场的当然就是单一职责原则。</p><h2>变化的原因</h2><p>单一职责原则，这个名字非常容易让我们望文生义，我们可能会理解成，一个类只干一件事，这看起来似乎是一项再合理不过的要求了。因为，几乎所有的程序员都知道“高内聚、低耦合”，都知道该把相关的代码放到一起。</p><p>所以，如果我们随便拿一个模块去问他的作者，这个模块是不是只做了一件事，他们的答案几乎都会是一样的：是的，只做了一件事。那么，既然这个设计原则如此通用，以至于所有的人都可以做到，那我们为什么还要有这样一个设计原则呢？</p><p>原因就在于，我们一开始的理解就是错的，我们把单一职责理解成了有关如何组合的原则，但实际上，单一职责是关于如何分解的。</p><p>那到底什么是单一职责原则呢？</p><p>正如Robert Martin所说，单一职责的定义经历了一些变化。在《敏捷软件开发：原则、实践与模式》中其定义是，“一个模块应该有且仅有一个变化的原因”；而到了《架构整洁之道》中，其定义就变成了“一个模块应该对一类且仅对一类行为者（actor）负责”。</p><p>单一职责原则和一个类只干一件事之间，最大的差别就是，<strong>将变化纳入了考量</strong>。</p><p>我们先分析第一个定义：一个模块应该有且仅有一个变化的原因。我们在课程一开始就在说，软件设计是一门关注长期变化的学问。变化是我们最不愿意面对却不得不面对的事，因为变化会引发新的不确定性，可能是新增功能自身的稳定问题，也可能是旧有功能遭到破坏带来的问题。</p><p>所以，<strong>一个模块最理想的状态是不改变，其次是少改变</strong>，它可以成为一个模块设计好坏的衡量标准。</p><p>在真实项目中，一个模块之所以会频繁变化，关键点就在于能引起它改变的原因太多了。</p><p>怎么理解呢？我们来看一个例子。假设我们要开发一个项目管理的工具，自然少不了一个用户的类，我们可能设计出这样一个用户类：</p><pre><code>// 用户类
+class User {
+  // 修改密码
+  void changePassword(String password);
+  // 加入一个项目
+  void joinProject(Project project);
+  // 接管一个项目，成为管理员
+  void takeOverProject(Project project);
+  ...
+}
+</code></pre><p>看上去，这个类设计得还挺合理，有用户信息管理、有项目管理等等。没过多久，新的需求来了，要求每个用户能够设置电话号码，所以，你给它增加了一个新的方法：</p><pre><code>  void changePhoneNumber(PhoneNumber phoneNumber):
+</code></pre><p>过了几天，又来了新需求，要查看一个用户加入了多少项目：</p><pre><code>  int countProject();
+</code></pre><p>就这样，左一个需求，右一个需求，几乎每个需求都要改到这个类。那会导致什么结果呢？一方面，这个类会不断膨胀；另一方面，内部的实现会越来越复杂。按照我们提出的衡量标准，这个类变动的频繁程度显然是不理想的，主要原因就在于它引起变动的需求太多了：</p><ul>
+<li>为什么要增加电话号码呢？因为这是用户管理的需求。用户管理的需求还会有很多，比如，用户实名认证、用户组织归属等等；</li>
+<li>为什么要查看用户加入多少项目呢？这是项目管理的需求。项目管理的需求还会有很多，比如，团队管理、项目权限等等。</li>
+</ul><p>这就是两种完全不同的需求，但它们都改到了同一个类，所以，这个User类就很难稳定下来。解决这种问题，最好的办法就是把不同的需求引起的变动拆分开来。针对这里的用户管理和项目管理两种不同需求，我们完全可以把这个User类拆成两个类。比如，像下面这样，把用户管理类的需求放到User类里，把项目管理类的需求放到Member类里：</p><pre><code>// 用户类
+class User {
+  // 修改密码
+  void changePassword(String password);
+  ...
+}
+
+// 项目成员类
+class Member
+  // 加入一个项目
+  void joinProject(Project project);
+  // 接管一个项目，成为管理员
+  void takeOverProject(Project project);
+  ...
+}
+</code></pre><p>如此一来，用户管理的需求只要调整User类就好，而项目管理的需求只要调整Member类即可，二者各自变动的理由就少了一些。</p><h2>变化的来源</h2><p>跟着我们课程一路学下来的同学可能发现了，上面的做法与我们之前讨论过的分离关注点很像。</p><p>确实是这样的，想要更好地理解单一职责原则，重要的就是要把不同的关注点分离出来。在上面这个例子中，分离的是不同的业务关注点。所以，<strong>理解单一职责原则本质上就是要理解分离关注点</strong>。</p><p>按照之前的说法，分离关注点，应该是发现的关注点越多越好，粒度越小越好。如果你能看到的关注点越多，就可以构建出更多的类，但每个类的规模相应地就会越小，与之相关的需求变动也会越少，它能够稳定下来的几率就会越大。我们代码库里<strong>稳定的类越多越好，这应该是我们努力的一个方向</strong>。</p><p>不过，也许你会想，如果将这种思路推演到极致，一个类应该只有一个方法，这样，它受到的影响应该是最小的。的确如此，但我们在真实项目中，一个类通常都不只有一个方法，如果我们要求所有人都做到极致，显然也是不现实的。</p><p>那应该把哪些内容组织到一起呢？这就需要我们考虑单一职责原则定义的升级版，也就是第二个定义：一个模块应该对一类且仅对一类行为者负责。</p><p><strong>如果说第一个定义将变化纳入了考量，那这个升级版的定义则将变化的来源纳入了考量</strong>。</p><p>需求为什么会改变？因为有各种提出需求的人，不同的人提出的需求，其关注点是不同的。在前面的那个关于用户的讨论中，关心用户管理和关心项目管理的可能就是两拨完全不同的人，至少他们在提需求的时候扮演的是两种不同的角色。</p><p>两种不同角色的人，两件不同的事，到了代码里却混在了一起，这是不合理的。所以，分开才是一个好选择。用户管理的人，我和他们聊User，项目管理的人，我们来讨论Member。</p><blockquote>
+<p>康威定律：一个组织设计出的系统，其结构受限于其组织的沟通结构。</p>
+</blockquote><p>Robert Martin说，单一职责原则是基于康威定律的一个推论：一个软件系统的最佳结构高度依赖于使用这个软件的组织的内部结构。如果我们的软件结构不能够与组织结构对应，就会带来一系列麻烦，前面的那个例子只是一个小例子。</p><p>实际上，当我们更新了对于单一职责原则的理解，你会发现，它的应用范围不仅仅可以放在类这样的级别，也可以放到更大的级别。</p><p>我给你举个例子。我曾经接触过一个交易平台，其中有一个关键模型：手续费率，就是交易一次按什么比例收取佣金。平台可以利用手续费率做不同的活动，比如，给一些人比较低的手续费率，鼓励他们来交易，不同的手续费率意味着对不同交易行为的鼓励。</p><p>所以，对运营人员来说，手续费率是一个可以玩出花的东西。然而，对交易系统而言，稳定高效是重点。显然，经常修改的手续费率和稳定的系统之间存在矛盾。</p><p>经过分析，我们发现，这是两类不同的行为者。所以，在设计的时候，我们把手续费率设置放到运营子系统，而交易子系统只负责读取手续费率。当运营子系统修改了手续费率，会把最新的结果更新到交易子系统中。至于各种手续费率设置的花样，交易子系统根本不需要关心。</p><p>你看，单一职责原则也可以指导我们在不同的子系统之间进行职责分配。所以，单一职责原则这个看起来最简单的原则，实际上也蕴含着很多值得挖掘的内容。要想理解好单一职责原则：</p><ul>
+<li>我们需要理解封装，知道要把什么样的内容放到一起；</li>
+<li>我们需要理解分离关注点，知道要把不同的内容拆分开来；</li>
+<li>我们需要理解变化的来源，知道把不同行为者负责的代码放到不同的地方。</li>
+</ul><p>在《<a href="http://time.geekbang.org/column/intro/100022301">10x程序员工作法</a>》中，我也提到过<a href="http://time.geekbang.org/column/article/87845">单一职责原则</a>，不过我是从自动化和任务分解的角度进行讲解的，其中讨论到了函数要小。结合今天的内容，你就可以更好地理解函数要小的含义了，每个函数承担的职责要单一，这样，它才能稳定下来。</p><h2>总结时刻</h2><p>今天，我们学习了单一职责原则。单一职责原则讲的并不是一个类只做一件事，它的关注点在于变化。其最初的定义是一个模块应该有且仅有一个变化的原因，后来其定义升级为一个模块应该对一类且仅对一类行为者负责。这个定义从考虑变化升级到考虑变化的来源。</p><p>单一职责原则，本质上体现的还是分离关注点，所以，它与分离关注点的思考角度是一样的，需要我们将模块拆分成更小的粒度。不过，相比于分离关注点，它会更加具体，因为它需要我们考察关注点的来源：不同的行为者。</p><p>单一职责原则可以应用于不同的层次，小到一个函数，大到一个系统，我们都可以用它来衡量我们的设计。</p><p>好，我们已经了解了SOLID的第一个原则：单一职责原则。下一讲，我们再来看下一个原则：开放封闭原则。</p><p>如果今天的内容你只能记住一件事，那请记住：<strong>应用单一职责原则衡量模块，粒度越小越好。</strong></p><p><img src="https://static001.geekbang.org/resource/image/a8/dc/a8586dc72f41c12d68fe69680ba8a3dc.jpg" alt=""></p><h2>思考题</h2><p>最后，我想请你反思一下，在你现有的系统设计中，有没有不符合单一职责原则的地方呢？应该如何改进呢？欢迎在留言区写下你的想法。</p><p>感谢阅读，如果你觉得这一讲的内容对你有帮助的话，也欢迎把它分享给你的朋友。</p><h2>精选留言：</h2>
+        <ul>
+        
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            Being  2020-07-14 09:07:01
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            老师提出的三个理解，是个层层递进的过程。<br>单个原子性模块固化下来的越多，可积累的就越多。 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            阳仔  2020-07-13 13:08:28
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            单一职责原则，相信很多人都了解过，但为何还是会出现高度耦合，职责不明的代码逻辑？<br>我觉得最根本原因是没有深入理解这个职责内涵（当然我自己也是），一开始的时候我们都自信满满的希望写出漂亮的代码，但随着版本迭代过程中，需求也不断变化，不知不觉就陷入到了变化之中。我们应该把这个原则铭记于心，当我们要修改这个模块或者类的时候，都要思考一下<br>我为何要修改这个类？这部分修改可不可以放在其它地方？ 
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;        line-height:1.2">作者回复2020-07-13 15:30:41</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;        word-break:break-all;line-height:1.6">指望每个人铭记是不现实的，需要配合代码评审去发现问题。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            Jxin  2020-07-13 10:55:55
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            1.老项目大部分应该都没有规范吧。自然也不会有符合单一职责这一说法。<br>2.要保障类或方法单一职责，并不总是单纯分割代码。更常见的，是要通读逻辑后，通过重构一点一点分离，对原逻辑改动还是比较大的。<br>3.我经常说接口要标准化，单一职责就是这里面的一个指标。写新项目可以逼着自己遵守这个。我不接受引入设计原则会降低需求迭代的认知，我相信刻意训练熟能生巧，有序的设计实现功能不会比无厘头的翻译功能慢，更多的是因为手生。但老项目，需不需要改进比如何改进重要。 
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;        line-height:1.2">作者回复2020-07-13 15:31:18</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;        word-break:break-all;line-height:1.6">一点一点改动，很有 10x 程序员的味道。</div>
+</div>
+            
+    </div>
+</li>
+            </ul>
+</div>
+</body>
+</html>

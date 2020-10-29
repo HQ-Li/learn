@@ -1,0 +1,1075 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>11-DSL：你也可以设计一门自己的语言</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <style>
+        html {
+            color: #333;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-rendering: optimizelegibility;
+            font-family: Helvetica Neue, PingFang SC, Verdana, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif
+        }
+
+        html.borderbox *,
+        html.borderbox :after,
+        html.borderbox :before {
+            box-sizing: border-box
+        }
+
+        article,
+        aside,
+        blockquote,
+        body,
+        button,
+        code,
+        dd,
+        details,
+        dl,
+        dt,
+        fieldset,
+        figcaption,
+        figure,
+        footer,
+        form,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        header,
+        hr,
+        input,
+        legend,
+        li,
+        menu,
+        nav,
+        ol,
+        p,
+        pre,
+        section,
+        td,
+        textarea,
+        th,
+        ul {
+            margin: 0;
+            padding: 0
+        }
+
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        menu,
+        nav,
+        section {
+            display: block
+        }
+
+        audio,
+        canvas,
+        video {
+            display: inline-block
+        }
+
+        body,
+        button,
+        input,
+        select,
+        textarea {
+            font: 300 1em/1.8 PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, Helvetica, sans-serif
+        }
+
+        button::-moz-focus-inner,
+        input::-moz-focus-inner {
+            padding: 0;
+            border: 0
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0
+        }
+
+        fieldset,
+        img {
+            border: 0
+        }
+
+        blockquote {
+            position: relative;
+            color: #999;
+            font-weight: 400;
+            border-left: 1px solid #1abc9c;
+            padding-left: 1em;
+            margin: 1em 3em 1em 2em
+        }
+
+        @media only screen and (max-width: 640px) {
+            blockquote {
+                margin: 1em 0
+            }
+        }
+
+        abbr,
+        acronym {
+            border-bottom: 1px dotted;
+            font-variant: normal
+        }
+
+        abbr {
+            cursor: help
+        }
+
+        del {
+            text-decoration: line-through
+        }
+
+        address,
+        caption,
+        cite,
+        code,
+        dfn,
+        em,
+        th,
+        var {
+            font-style: normal;
+            font-weight: 400
+        }
+
+        ol,
+        ul {
+            list-style: none
+        }
+
+        caption,
+        th {
+            text-align: left
+        }
+
+        q:after,
+        q:before {
+            content: ""
+        }
+
+        sub,
+        sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative
+        }
+
+        :root sub,
+        :root sup {
+            vertical-align: baseline
+        }
+
+        sup {
+            top: -.5em
+        }
+
+        sub {
+            bottom: -.25em
+        }
+
+        a {
+            color: #1abc9c
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        .typo a {
+            border-bottom: 1px solid #1abc9c
+        }
+
+        .typo a:hover {
+            border-bottom-color: #555;
+            color: #555
+        }
+
+        .typo a:hover,
+        a,
+        ins {
+            text-decoration: none
+        }
+
+        .typo-u,
+        u {
+            text-decoration: underline
+        }
+
+        mark {
+            background: #fffdd1;
+            border-bottom: 1px solid #ffedce;
+            padding: 2px;
+            margin: 0 5px
+        }
+
+        code,
+        pre,
+        pre tt {
+            font-family: Courier, Courier New, monospace
+        }
+
+        pre {
+            background: hsla(0, 0%, 97%, .7);
+            border: 1px solid #ddd;
+            padding: 1em 1.5em;
+            display: block;
+            -webkit-overflow-scrolling: touch
+        }
+
+        hr {
+            border: none;
+            border-bottom: 1px solid #cfcfcf;
+            margin-bottom: .8em;
+            height: 10px
+        }
+
+        .typo-small,
+        figcaption,
+        small {
+            font-size: .9em;
+            color: #888
+        }
+
+        b,
+        strong {
+            font-weight: 700;
+            color: #000
+        }
+
+        [draggable] {
+            cursor: move
+        }
+
+        .clearfix:after,
+        .clearfix:before {
+            content: "";
+            display: table
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+
+        .clearfix {
+            zoom: 1
+        }
+
+        .textwrap,
+        .textwrap td,
+        .textwrap th {
+            word-wrap: break-word;
+            word-break: break-all
+        }
+
+        .textwrap-table {
+            table-layout: fixed
+        }
+
+        .serif {
+            font-family: Palatino, Optima, Georgia, serif
+        }
+
+        .typo-dl,
+        .typo-form,
+        .typo-hr,
+        .typo-ol,
+        .typo-p,
+        .typo-pre,
+        .typo-table,
+        .typo-ul,
+        .typo dl,
+        .typo form,
+        .typo hr,
+        .typo ol,
+        .typo p,
+        .typo pre,
+        .typo table,
+        .typo ul,
+        blockquote {
+            margin-bottom: 1rem
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: PingFang SC, Helvetica Neue, Verdana, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+            color: #000;
+            line-height: 1.35
+        }
+
+        .typo-h1,
+        .typo-h2,
+        .typo-h3,
+        .typo-h4,
+        .typo-h5,
+        .typo-h6,
+        .typo h1,
+        .typo h2,
+        .typo h3,
+        .typo h4,
+        .typo h5,
+        .typo h6 {
+            margin-top: 1.2em;
+            margin-bottom: .6em;
+            line-height: 1.35
+        }
+
+        .typo-h1,
+        .typo h1 {
+            font-size: 2em
+        }
+
+        .typo-h2,
+        .typo h2 {
+            font-size: 1.8em
+        }
+
+        .typo-h3,
+        .typo h3 {
+            font-size: 1.6em
+        }
+
+        .typo-h4,
+        .typo h4 {
+            font-size: 1.4em
+        }
+
+        .typo-h5,
+        .typo-h6,
+        .typo h5,
+        .typo h6 {
+            font-size: 1.2em
+        }
+
+        .typo-ul,
+        .typo ul {
+            margin-left: 1.3em;
+            list-style: disc
+        }
+
+        .typo-ol,
+        .typo ol {
+            list-style: decimal;
+            margin-left: 1.9em
+        }
+
+        .typo-ol ol,
+        .typo-ol ul,
+        .typo-ul ol,
+        .typo-ul ul,
+        .typo li ol,
+        .typo li ul {
+            margin-bottom: .8em;
+            margin-left: 2em
+        }
+
+        .typo-ol ul,
+        .typo-ul ul,
+        .typo li ul {
+            list-style: circle
+        }
+
+        .typo-table td,
+        .typo-table th,
+        .typo table caption,
+        .typo table td,
+        .typo table th {
+            border: 1px solid #ddd;
+            padding: .5em 1em;
+            color: #666
+        }
+
+        .typo-table th,
+        .typo table th {
+            background: #fbfbfb
+        }
+
+        .typo-table thead th,
+        .typo table thead th {
+            background: hsla(0, 0%, 95%, .7)
+        }
+
+        .typo table caption {
+            border-bottom: none
+        }
+
+        .typo-input,
+        .typo-textarea {
+            -webkit-appearance: none;
+            border-radius: 0
+        }
+
+        .typo-em,
+        .typo em,
+        caption,
+        legend {
+            color: #000;
+            font-weight: inherit
+        }
+
+        .typo-em {
+            position: relative
+        }
+
+        .typo-em:after {
+            position: absolute;
+            top: .65em;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            content: "\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB"
+        }
+
+        .typo img {
+            max-width: 100%
+        }
+
+        .common-content {
+            font-weight: 400;
+            color: #353535;
+            line-height: 1.75rem;
+            white-space: normal;
+            word-break: normal;
+            font-size: 1rem
+        }
+
+        .common-content img {
+            display: block;
+            max-width: 100%;
+            background-color: #eee
+        }
+
+        .common-content audio,
+        .common-content video {
+            width: 100%;
+            background-color: #eee
+        }
+
+        .common-content center,
+        .common-content font {
+            margin-top: 1rem;
+            display: inline-block
+        }
+
+        .common-content center {
+            width: 100%
+        }
+
+        .common-content pre {
+            margin-top: 1rem;
+            padding-left: 0;
+            padding-right: 0;
+            position: relative;
+            overflow: hidden
+        }
+
+        .common-content pre code {
+            font-size: .8rem;
+            font-family: Consolas, Liberation Mono, Menlo, monospace, Courier;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            overflow-x: auto
+        }
+
+        .common-content hr {
+            border: none;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-top: 1px solid #f5f5f5;
+            height: 1px;
+            background: none
+        }
+
+        .common-content b,
+        .common-content h1,
+        .common-content h2,
+        .common-content h3,
+        .common-content h4,
+        .common-content h5,
+        .common-content strong {
+            font-weight: 700
+        }
+
+        .common-content h1,
+        .common-content h2 {
+            font-size: 1.125rem;
+            margin-bottom: .45rem
+        }
+
+        .common-content h3,
+        .common-content h4,
+        .common-content h5 {
+            font-size: 1rem;
+            margin-bottom: .45rem
+        }
+
+        .common-content p {
+            font-weight: 400;
+            color: #353535;
+            margin-top: .15rem
+        }
+
+        .common-content .orange {
+            color: #ff5a05
+        }
+
+        .common-content .reference {
+            font-size: 1rem;
+            color: #888
+        }
+
+        .custom-rich-content h1 {
+            margin-top: 0;
+            font-weight: 400;
+            font-size: 15.25px;
+            border-bottom: 1px solid #eee;
+            line-height: 2.8
+        }
+
+        .custom-rich-content li,
+        .custom-rich-content p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.6
+        }
+
+        table.hljs-ln {
+            margin-bottom: 0;
+            border-spacing: 0;
+            border-collapse: collapse
+        }
+
+        table.hljs-ln,
+        table.hljs-ln tbody,
+        table.hljs-ln td,
+        table.hljs-ln tr {
+            box-sizing: border-box
+        }
+
+        table.hljs-ln td {
+            padding: 0;
+            border: 0
+        }
+
+        table.hljs-ln td.hljs-ln-numbers {
+            min-width: 15px;
+            color: rgba(27, 31, 35, .3);
+            text-align: right;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none
+        }
+
+        table.hljs-ln td.hljs-ln-code,
+        table.hljs-ln td.hljs-ln-numbers {
+            font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+            font-size: 12px;
+            line-height: 20px;
+            vertical-align: top
+        }
+
+        table.hljs-ln td.hljs-ln-code {
+            position: relative;
+            padding-right: 10px;
+            padding-left: 10px;
+            overflow: visible;
+            color: #24292e;
+            word-wrap: normal;
+            white-space: pre
+        }
+
+        video::-webkit-media-controls {
+            overflow: hidden !important
+        }
+
+        video::-webkit-media-controls-enclosure {
+            width: calc(100% + 32px);
+            margin-left: auto
+        }
+
+        ._29HP61GA_0 {
+            max-width:800px;
+            margin:0 auto;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: #353535;
+            line-height: 1.76;
+            white-space: normal;
+            word-break: normal;
+            font-size: 17px;
+            -webkit-transition: background-color .3s ease;
+            transition: background-color .3s ease
+        }
+
+        ._29HP61GA_0 .MathJax_Display {
+            overflow: auto
+        }
+
+        ._29HP61GA_0 .poster {
+            position: fixed;
+            left: -10000px;
+            top: -10000px;
+            overflow: hidden;
+            padding: 1rem;
+            background: #ececec
+        }
+
+        ._29HP61GA_0 .richcontent-pre-copy {
+            font-size: 13px;
+            color: #888;
+            position: absolute;
+            right: 1em;
+            top: .5em;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        ._29HP61GA_0 .richcontent-pre-copy .iconfont {
+            font-size: 12px;
+            margin-right: .2em
+        }
+
+        ._29HP61GA_0 a {
+            color: #fa8919;
+            border-bottom: 1px solid #fa8919
+        }
+
+        ._29HP61GA_0 img {
+            display: block;
+            max-width: 100%;
+            position: relative;
+            left: 50%;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+            background-color: #eee;
+            vertical-align: top;
+            border-radius: 0
+        }
+
+        ._29HP61GA_0 audio,
+        ._29HP61GA_0 video {
+            width: 100%;
+            background-color: #eee
+        }
+
+        ._29HP61GA_0 pre {
+            margin-top: 16px;
+            padding: 34px 0 0;
+            margin-bottom: 30px;
+            position: relative;
+            border-radius: 6px;
+            background: rgba(246, 247, 251, .749);
+            border: 0
+        }
+
+        ._29HP61GA_0 pre code {
+            font-size: 12px;
+            font-family: Consolas, Liberation Mono, Menlo, monospace, Courier;
+            display: block;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            margin-left: 16px;
+            margin-right: 16px;
+            overflow-x: scroll
+        }
+
+        ._29HP61GA_0 pre code:after {
+            content: "";
+            height: 30px;
+            width: 100%;
+            display: block
+        }
+
+        ._29HP61GA_0 hr {
+            border: none;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-top: 1px solid #f5f5f5;
+            height: 1px;
+            background: none
+        }
+
+        ._29HP61GA_0 h1,
+        ._29HP61GA_0 h2,
+        ._29HP61GA_0 h3,
+        ._29HP61GA_0 h4,
+        ._29HP61GA_0 h5 {
+            margin-bottom: 20px;
+            margin-top: 0;
+            font-weight: 700
+        }
+
+        ._29HP61GA_0 b,
+        ._29HP61GA_0 strong {
+            font-weight: 700
+        }
+
+        ._29HP61GA_0 h1 {
+            font-size: 21px
+        }
+
+        ._29HP61GA_0 h2 {
+            font-size: 20px
+        }
+
+        ._29HP61GA_0 h3 {
+            font-size: 19px
+        }
+
+        ._29HP61GA_0 h4 {
+            font-size: 18px
+        }
+
+        ._29HP61GA_0 h5 {
+            font-size: 17px
+        }
+
+        ._29HP61GA_0 center,
+        ._29HP61GA_0 p {
+            font-weight: 400;
+            color: #353535;
+            margin-top: 0;
+            margin-bottom: 30px;
+            word-break: break-word
+        }
+
+        ._29HP61GA_0 center {
+            text-align: center
+        }
+
+        ._29HP61GA_0 blockquote {
+            margin-top: 0;
+            margin-bottom: 34px;
+            border-left: 3px solid #e8e8e8;
+            padding-left: 17px;
+            color: #353535
+        }
+
+        ._29HP61GA_0 blockquote p {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+
+        ._29HP61GA_0 ol,
+        ._29HP61GA_0 ul {
+            margin-bottom: 30px
+        }
+
+        ._29HP61GA_0 ol p,
+        ._29HP61GA_0 ul p {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+
+        ._29HP61GA_0 ol {
+            list-style: decimal;
+            margin-left: 20px
+        }
+
+        ._29HP61GA_0 ul li {
+            padding-left: 17px;
+            position: relative;
+            margin-bottom: 10px
+        }
+
+        ._29HP61GA_0 ul li:after {
+            content: "";
+            height: 6px;
+            width: 6px;
+            border-radius: 50%;
+            background: #353535;
+            position: absolute;
+            top: 10px;
+            left: 0
+        }
+
+        ._29HP61GA_0 .orange {
+            color: #fa8919
+        }
+
+        ._29HP61GA_0 .reference {
+            color: #888
+        }
+
+        ._29HP61GA_0 .m-right {
+            text-align: right
+        }
+
+        ._29HP61GA_0 .m-center {
+            text-align: center;
+            display: block
+        }
+
+        ._29HP61GA_0 .m-gray {
+            color: #888
+        }
+
+        ._29HP61GA_0 .m-small {
+            font-size: 15px
+        }
+
+        ._29HP61GA_0 table.hljs-ln {
+            margin-bottom: 0;
+            border-spacing: 0;
+            border-collapse: collapse
+        }
+
+        ._29HP61GA_0 table.hljs-ln,
+        ._29HP61GA_0 table.hljs-ln tbody,
+        ._29HP61GA_0 table.hljs-ln td,
+        ._29HP61GA_0 table.hljs-ln tr {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box
+        }
+
+        ._29HP61GA_0 table.hljs-ln td {
+            padding: 0;
+            border: 0
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-numbers {
+            min-width: 15px;
+            font-size: 12px;
+            color: rgba(27, 31, 35, .3);
+            text-align: right;
+            white-space: nowrap;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-code,
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-numbers {
+            font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+            line-height: 20px;
+            vertical-align: top
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-code {
+            position: relative;
+            padding-right: 10px;
+            padding-left: 10px;
+            overflow: visible;
+            font-size: 13px;
+            color: #666;
+            word-wrap: normal;
+            white-space: pre
+        }
+
+    </style>
+</head>
+<body>
+<div class="_29HP61GA_0">
+<h1>11-DSL：你也可以设计一门自己的语言</h1>
+<p>你好！我是郑晔。</p><p>在前面，我们花了三讲的篇幅探讨程序设计语言，一方面是为了增进我们对程序设计语言的理解，另一方面，也希望从中学习到软件设计方面做得好的地方。除了借鉴一些语言特性之外，我们还能怎样应用程序语言，来帮我们做设计呢？</p><p>讲到程序设计语言模型时，我说过，程序设计语言的发展趋势，就是离计算机本身越来越远，而离要解决的问题越来越近。但通用程序设计语言无论怎样逼近要解决的问题，它都不可能走得离问题特别近，因为通用程序设计语言不可能知道具体的问题是什么。</p><p>这给具体的问题留下了一个空间，<strong>如果我们能把设计做到极致，它就能成为一门语言</strong>，填补这个空间。注意，我这里用的并不是比喻，而是真的成为一门语言，一门解决一个特定问题的语言。</p><p><img src="https://static001.geekbang.org/resource/image/fd/c6/fd861a726b8a85d1d22ca56b78515cc6.jpg" alt=""></p><p>这种语言就是领域特定语言（Domain Specific Language，简称 DSL），它是一种用于某个特定领域的程序设计语言。这种特定于某个领域是相对于通用语言而言的，通用语言可以横跨各个领域，我们熟悉的大多数程序设计语言都是通用语言。</p><p>我在<a href="https://time.geekbang.org/column/article/245868">第8讲</a>说过，它们都是图灵完备的，但DSL不必做到图灵完备，它只要做到满足特定领域的业务需求，就足以缩短问题和解决方案之间的距离，降低理解的门槛。</p><!-- [[[read_end]]] --><p>虽然大多数程序员并不会真正地实现一个通用程序设计语言，但实现一个DSL，我们还是有机会的。这一讲我们就来谈谈DSL，看看我们可以怎样设计自己的语言。</p><h2>领域特定语言</h2><p>不过，一说起设计一门语言，很多人直觉上会有畏惧心理。但实际上，你可能已经在各种场合接触过一些不同的DSL了。程序员最熟悉的一种DSL就是正则表达式了，没错，也许已经习惯使用正则表达式的你都不知道，但它确实就是一种DSL，一种用于文本处理这个特定领域的DSL。</p><p>如果你觉得正则表达式有点复杂，还有一种更简单的DSL，就是配置文件。你可能真的不把配置文件当作一种DSL，但它确实是在实现某个特定领域的需求，而且可以根据你的需求对软件的行为进行定制。</p><p>一个典型的例子是Ngnix。无论你是用它单独做Web服务器也好，做反向代理也罢，抑或是做负载均衡，只要通过Ngnix的配置文件，你都能实现。配合OpenResty，你甚至可以完成一些业务功能。</p><p>这么一说，你是不是觉得DSL的门槛不像听上去那么高了。</p><p>经过前面几讲的学习，你应该知道了，语法只是一种接口。很多人说到设计DSL，脑子里实际想的也只是设计一种语法。所以，从软件设计的角度看，DSL最终呈现出来的语法只是一种接口，但最重要的是它包裹的模型。</p><p>Martin Fowler在他的《领域特定语言》这本书中，将这个模型称为语义模型（Semantic Model）。不过，在我看来，Martin Fowler起这个名字是站在语言开发的角度，毕竟语义这个词，只有学过编译原理的人才好理解。所以，这里真正的重点是模型。</p><p>想要实现一个DSL，可以这么说，DSL的语法本身都是次要的，模型才是第一位的。当你有了模型之后，所谓的构建DSL，就相当于设计一个接口，将模型的能力暴露出来。</p><p>当把DSL理解成接口，我们接受DSL的心理负担就小了很多。你可以想一想，它和你熟悉的REST API其实没有什么本质的不同。</p><p>既然是接口，形式就可以有很多种，我们经常能接触到的DSL主要有两种：外部DSL和内部 DSL。Martin Fowler在他的书中还提到了语言工作台（Language Workbench），不过，这种做法在实际工作中用到的不多，我们暂且忽略。</p><p>外部DSL和内部DSL的区别就在于，DSL采用的是不是宿主语言（Host Language）。你可以这么理解，假设你的模型主要是用Java写的，如果DSL用的就是Java语言，它就是内部DSL，如果DSL用的不是Java，比如，你自己设计了一种语法，那它就是外部DSL。</p><p>把概念说清楚了，一些问题便迎刃而解了。这也可以解释为什么DSL让有些人畏惧了，原因就是说起 DSL，这些人想到的就是自己设计语法的外部的 DSL。其实，即便是外部DSL，也不一定要设计一门语法，我们甚至可以借助已有的语法来完成。比如，很多程序员熟悉的一种语法：XML。</p><p>如果你是一个Java程序员，XML就再熟悉不过了。从Ant到Maven，从Servlet到Spring，曾经的XML几乎是无处不在的。如果你有兴趣，可以去找一些使用Ant做构建工具的项目，项目规模稍微大一点，其XML配置文件的复杂程度就不亚于普通的源代码。</p><p>因为它本质上就是一种用于构建领域的DSL，只不过，它的语法是XML而已。正是因为这种DSL越来越复杂，后来，一种新的趋势渐渐兴起，就是用全功能语言（也就是真正的程序设计语言）做DSL，这是后来像Gradle这种构建工具逐渐流行的原因，它们只是用内部DSL替换了外部DSL。</p><p>从复杂度而言，自己设计一种外部DSL语法，大于利用一种现有语法做外部DSL，二者之间的差别在于谁来开发解析器。而外部DSL的复杂度要大于内部DSL，因为内部DSL连解析的过程都省略了。从实用性的角度，更好地挖掘内部DSL的潜力对我们的实际工作助益更多。</p><h2>代码的表达性</h2><p>你或许会有一个疑问，内部DSL听上去就是一个程序库啊！你这个理解是没错的。我们前面说过，语言设计就是程序库设计，程序库设计就是语言设计。当一个程序库只能用在某个特定领域时，它就是一个内部DSL，这个内部DSL的语法就是这个程序库的用法。</p><p>我先用一个例子让你感受一下内部DSL，它来自Martin Fowler的《领域特定语言》。我们要创建一个Computer的实例，如果用普通风格的代码写出来，应该是这个样子：</p><pre><code>Processor p = new Processor(2, 2500, Processor.Type.i386); Disk d1 = new Disk(150, Disk.UNKNOWN_SPEED, null);
+Disk d2 = new Disk(75, 7200, Disk.Interface.SATA);
+return new Computer(p, d1, d2);
+</code></pre><p>而用内部 DSL 写出来，则是这种风格：</p><pre><code>computer() 
+  .processor()
+    .cores(2) 
+    .speed(2500) 
+    .i386()
+  .disk()
+    .size(150)
+  .disk()
+   .size(75)
+   .speed(7200) 
+   .sata()
+.end();
+</code></pre><p>如果这是一段普通的Java代码，我们看到一连串的方法调用，一定会说，这段代码糟糕至极！但在这个场景下，和前面的代码相比，这段代码省去了好多变量，反而是清晰了。这其中的差别在哪里呢？</p><p>之所以我们会觉得这种一连串的方法调用可以接受，一个重要的原因是，这段代码并不是在做动作，而是在进行声明。做动作是在说明怎么做（How），而声明的代码则是在说做什么（What）。</p><p>二者的抽象级别是不同的，“怎么做”是一种实现，而“做什么”则体现着意图。<strong>将意图与实现分离开来</strong>，是内部DSL与普通的程序代码一个重要的区别，同样，这也是一个好设计的考虑因素。</p><p>Martin Fowler在讨论DSL定义时，提到了DSL的4个关键元素：</p><ul>
+<li>计算机程序设计语言（Computer programming language）；</li>
+<li>语言性（Language nature）；</li>
+<li>受限的表达性（Limited expressiveness）；</li>
+<li>针对领域（Domain focus）。</li>
+</ul><p>其中，语言性强调的就是DSL要有连贯的表达能力。也就是说，你设计自己的DSL时，重点是要体现出意图。抛开是否要实现一个DSL不说，的确，<strong>程序员在写代码时应该关注代码的表达能力</strong>，而这也恰恰是很多程序员忽略的，同时也是优秀程序员与普通程序员拉开差距的地方。</p><p>普通程序员的关注点只在于功能如何实现，而优秀的程序员会懂得将不同层次的代码分离开来，将意图和实现分离开来，而实现可以替换。</p><p>说到这里，你就不难理解学习内部DSL的价值了，退一步说，你不一定真的要自己设计一个内部DSL，但学会将意图与实现分离开，这件事对日常写代码也是有极大价值的。</p><p>有了这个意识，你就可以很好地理解程序设计语言的一个重要发展趋势：声明式编程。现在一些程序设计语言的语法就是为了方便进行声明式编程，典型的例子就是Java的Annotation。正是它的出现，Spring原来基于XML的外部DSL就逐步转向了今天常用的内部DSL了，也就是很多人熟悉的Java Config。</p><p>你会发现，虽然我在这说的是写代码，但分离意图和实现其实也是一个重要的设计原则，是的，<strong>想写好代码，一定要懂得设计</strong>。</p><h2>总结时刻</h2><p>今天，我们讨论了领域特定语言，这是针对某个特定领域的程序设计语言。DSL在软件开发领域中得到了广泛的应用。要实现一个DSL，首先要构建好模型。</p><p>常见的DSL主要是外部 DSL和内部DSL。二者的主要区别在于，DSL采用的是不是宿主语言。相对于外部 DSL，内部DSL的开发成本更低，与我们的日常工作结合得更加紧密。</p><p>内部DSL体现更多的是表达能力，相对于传统的代码编写方法而言，这种做法很好地将作者的意图体现了出来。即便我们不去设计一个内部DSL，这种写代码的方式也会对我们代码质量的提高大有助益。</p><p>关于语言，已经讲了四讲，我们先告一段落。下一讲，我们要来讨论编程范式，也就是做设计的时候，我们可以利用的元素有哪些。</p><p>如果今天的内容你只能记住一件事，那请记住：<strong>好的设计要迈向DSL，我们可以从编写有表达性的代码起步</strong>。</p><p><img src="https://static001.geekbang.org/resource/image/75/33/7516280b19aacd35a2235e54d14b0833.jpg" alt=""></p><h2>思考题</h2><p>最后，我想请你分享一下，你还能举出哪些DSL的例子呢？欢迎在留言区分享你的想法。</p><p>感谢阅读，如果你觉得这一讲的内容对你有帮助的话，也欢迎把它分享给你的朋友。</p><h2>精选留言：</h2>
+        <ul>
+        
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            蓝士钦  2020-06-17 08:30:14
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            SQL也是一种DSL，他屏蔽了计算机存储的底层实现，提供了易于操作数据的接口。<br>一些ORM框架对SQL这些DSL进行了进一步的封装提供了声明式注解，相当于构建在DSL之上的DSL翻译器。面向对象编程将面向关系的DSL进行更高层次的封装，使得在编程这个特定领域更加易于使用。 [6赞]
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;        line-height:1.2">作者回复2020-06-17 11:14:43</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;        word-break:break-all;line-height:1.6">很好的分享！</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            泡泡龙  2020-06-17 07:38:35
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            我觉得markdown应该算一个 [4赞]
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;        line-height:1.2">作者回复2020-06-17 11:21:25</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;        word-break:break-all;line-height:1.6">嗯，好有趣的角度！</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            Jxin  2020-06-17 01:12:39
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            1.k8s和docker-compose的yml文件，就是声明试编程。算是外部dsl。<br><br>2.本章疑问： dsl和接口有何异同点？<br><br>首先dsl和接口都做了一件事，就是意图和实现的分离。但是dsl的语义（意图）是可以灵活组织的，而接口的语义基本靠接口命名和方法命名来阐述，在灵活性上明显是不足的。<br><br>如何去实现dsl？第一感觉就是建造者模式。这里实现就有分支。第一种是将要执行的业务逻辑（实现）写在dsl实体bean内部。在所有业务功能都由实体内部属性决定时，这是可行的（领域模型的行为）；第二种是将执行的业务功能注入要创建的dsl实体，然后回调。毕竟复杂业务流程的组织不该是单个实体能够囊括的，而且我们的功能代码大部分还是面向过程的（java就是一个service注入一个service，然后嵌套调用）；第三种就是将dsl实体作为入参传入接口方法，然后通过其属性调整业务流向，控制代码逻辑。这种方式我认为是开发维护成本最低的（面向过程不好，但他简单呀，不需要什么设计知识背书，懂语法就能看懂），但是我在某本书看到过，“程序的逻辑不该由入参去控制”。是定制多个接口方法。还是提供统一方法由入参调度逻辑，真的不好说孰好孰劣。<br><br> [4赞]
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;        line-height:1.2">作者回复2020-06-17 11:19:42</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;        word-break:break-all;line-height:1.6">后面我们就来谈结构化编程和面向对象编程。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            happychap  2020-06-17 21:51:27
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            drone.io用的.drone.yml，jenkins用的pipefile都算是轻量级的dsl。uml算不算是一种重量级的dsl呢？ [2赞]
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;        line-height:1.2">作者回复2020-06-18 06:46:28</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;        word-break:break-all;line-height:1.6">UML可能不算，因为它不能执行。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            阳仔  2020-06-17 09:20:56
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            DSL是为了解决某个特定领域的程序设计语言。<br>作为一个客户端APP开发者，最常用到的莫过于gradle。<br>现在JAVA后端程序主要是通过pom配置构建，它其实就是通过xml来实现DSL，<br>我觉得后端程序通过gradle构建也将会成为主流。它比xml更加灵活，表达性更强<br>要设计一个DSL就要构建一个模型，通过接口将能力暴露出来。<br>如何暴露接口就可以分为内部DSL和外部DSL，内部DSL使用编程语言如JAVA来实现，外部则使用类似xml语言来实现，或者自己设计语法<br>实现内部DSL要将意图与实现区分开，这在程序设计中一个重要的原则 [2赞]
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;        line-height:1.2">作者回复2020-06-17 11:15:11</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;        word-break:break-all;line-height:1.6">非常好的总结！</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            被雨水过滤的空气  2020-06-18 13:02:43
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            高级编程语言是低级编程语言的DSL。 [1赞]
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;        line-height:1.2">作者回复2020-06-18 13:25:39</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;        word-break:break-all;line-height:1.6">哈哈，确实可以这么理解。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            escray  2020-06-18 09:30:27
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            我还没有到“设计一个 DSL”的高度，而且可能日常工作中遇到的问题也没有需要一门新的 DSL 来解决。<br><br>正则表达式、配置文件和 SQL 都可以算作 DSL，这些都是受众比较广泛的，如果是自己设计一个，使用的人没有那么多，还有意义么？<br><br>看了内部 DSL 的 Computer 的例子，感觉 DSL 不那么可怕了；顺便理解了为什么这“一连串的方法调用”可以被接受——因为这是一段声明 What。<br><br>反之，如果是一连串的动作，就应该避免了。<br><br>虽然短时间内估计不会有设计 DSL 的机会，不过“编写有表达性的代码”，“分离意图和实现”是我可以追求的目标。<br><br>看到留言里面有同学说可以把 Markdown 也当做一种 DSL，那么其针对的领域是什么呢，排版？ [1赞]
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            再来二两杜康酒  2020-06-17 23:55:14
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            lambda，网络协议描述算不算是dsl呢？ [1赞]
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;        line-height:1.2">作者回复2020-06-18 09:30:57</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;        word-break:break-all;line-height:1.6">DSL 首先是一门语言，能够执行的那种。单独的 Lambda 和协议都是不可执行的。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            NIU  2020-06-17 05:51:20
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            如果这么说，移动端开发常用的Cocoapods也是一种DSL。 
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;        line-height:1.2">作者回复2020-06-17 11:18:27</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;        word-break:break-all;line-height:1.6">嗯，也算。</div>
+</div>
+            
+    </div>
+</li>
+            </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,999 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>开篇词-软件设计，应对需求规模的“算法”</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <style>
+        html {
+            color: #333;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-rendering: optimizelegibility;
+            font-family: Helvetica Neue, PingFang SC, Verdana, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif
+        }
+
+        html.borderbox *,
+        html.borderbox :after,
+        html.borderbox :before {
+            box-sizing: border-box
+        }
+
+        article,
+        aside,
+        blockquote,
+        body,
+        button,
+        code,
+        dd,
+        details,
+        dl,
+        dt,
+        fieldset,
+        figcaption,
+        figure,
+        footer,
+        form,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        header,
+        hr,
+        input,
+        legend,
+        li,
+        menu,
+        nav,
+        ol,
+        p,
+        pre,
+        section,
+        td,
+        textarea,
+        th,
+        ul {
+            margin: 0;
+            padding: 0
+        }
+
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        menu,
+        nav,
+        section {
+            display: block
+        }
+
+        audio,
+        canvas,
+        video {
+            display: inline-block
+        }
+
+        body,
+        button,
+        input,
+        select,
+        textarea {
+            font: 300 1em/1.8 PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, Helvetica, sans-serif
+        }
+
+        button::-moz-focus-inner,
+        input::-moz-focus-inner {
+            padding: 0;
+            border: 0
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0
+        }
+
+        fieldset,
+        img {
+            border: 0
+        }
+
+        blockquote {
+            position: relative;
+            color: #999;
+            font-weight: 400;
+            border-left: 1px solid #1abc9c;
+            padding-left: 1em;
+            margin: 1em 3em 1em 2em
+        }
+
+        @media only screen and (max-width: 640px) {
+            blockquote {
+                margin: 1em 0
+            }
+        }
+
+        abbr,
+        acronym {
+            border-bottom: 1px dotted;
+            font-variant: normal
+        }
+
+        abbr {
+            cursor: help
+        }
+
+        del {
+            text-decoration: line-through
+        }
+
+        address,
+        caption,
+        cite,
+        code,
+        dfn,
+        em,
+        th,
+        var {
+            font-style: normal;
+            font-weight: 400
+        }
+
+        ol,
+        ul {
+            list-style: none
+        }
+
+        caption,
+        th {
+            text-align: left
+        }
+
+        q:after,
+        q:before {
+            content: ""
+        }
+
+        sub,
+        sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative
+        }
+
+        :root sub,
+        :root sup {
+            vertical-align: baseline
+        }
+
+        sup {
+            top: -.5em
+        }
+
+        sub {
+            bottom: -.25em
+        }
+
+        a {
+            color: #1abc9c
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        .typo a {
+            border-bottom: 1px solid #1abc9c
+        }
+
+        .typo a:hover {
+            border-bottom-color: #555;
+            color: #555
+        }
+
+        .typo a:hover,
+        a,
+        ins {
+            text-decoration: none
+        }
+
+        .typo-u,
+        u {
+            text-decoration: underline
+        }
+
+        mark {
+            background: #fffdd1;
+            border-bottom: 1px solid #ffedce;
+            padding: 2px;
+            margin: 0 5px
+        }
+
+        code,
+        pre,
+        pre tt {
+            font-family: Courier, Courier New, monospace
+        }
+
+        pre {
+            background: hsla(0, 0%, 97%, .7);
+            border: 1px solid #ddd;
+            padding: 1em 1.5em;
+            display: block;
+            -webkit-overflow-scrolling: touch
+        }
+
+        hr {
+            border: none;
+            border-bottom: 1px solid #cfcfcf;
+            margin-bottom: .8em;
+            height: 10px
+        }
+
+        .typo-small,
+        figcaption,
+        small {
+            font-size: .9em;
+            color: #888
+        }
+
+        b,
+        strong {
+            font-weight: 700;
+            color: #000
+        }
+
+        [draggable] {
+            cursor: move
+        }
+
+        .clearfix:after,
+        .clearfix:before {
+            content: "";
+            display: table
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+
+        .clearfix {
+            zoom: 1
+        }
+
+        .textwrap,
+        .textwrap td,
+        .textwrap th {
+            word-wrap: break-word;
+            word-break: break-all
+        }
+
+        .textwrap-table {
+            table-layout: fixed
+        }
+
+        .serif {
+            font-family: Palatino, Optima, Georgia, serif
+        }
+
+        .typo-dl,
+        .typo-form,
+        .typo-hr,
+        .typo-ol,
+        .typo-p,
+        .typo-pre,
+        .typo-table,
+        .typo-ul,
+        .typo dl,
+        .typo form,
+        .typo hr,
+        .typo ol,
+        .typo p,
+        .typo pre,
+        .typo table,
+        .typo ul,
+        blockquote {
+            margin-bottom: 1rem
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: PingFang SC, Helvetica Neue, Verdana, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+            color: #000;
+            line-height: 1.35
+        }
+
+        .typo-h1,
+        .typo-h2,
+        .typo-h3,
+        .typo-h4,
+        .typo-h5,
+        .typo-h6,
+        .typo h1,
+        .typo h2,
+        .typo h3,
+        .typo h4,
+        .typo h5,
+        .typo h6 {
+            margin-top: 1.2em;
+            margin-bottom: .6em;
+            line-height: 1.35
+        }
+
+        .typo-h1,
+        .typo h1 {
+            font-size: 2em
+        }
+
+        .typo-h2,
+        .typo h2 {
+            font-size: 1.8em
+        }
+
+        .typo-h3,
+        .typo h3 {
+            font-size: 1.6em
+        }
+
+        .typo-h4,
+        .typo h4 {
+            font-size: 1.4em
+        }
+
+        .typo-h5,
+        .typo-h6,
+        .typo h5,
+        .typo h6 {
+            font-size: 1.2em
+        }
+
+        .typo-ul,
+        .typo ul {
+            margin-left: 1.3em;
+            list-style: disc
+        }
+
+        .typo-ol,
+        .typo ol {
+            list-style: decimal;
+            margin-left: 1.9em
+        }
+
+        .typo-ol ol,
+        .typo-ol ul,
+        .typo-ul ol,
+        .typo-ul ul,
+        .typo li ol,
+        .typo li ul {
+            margin-bottom: .8em;
+            margin-left: 2em
+        }
+
+        .typo-ol ul,
+        .typo-ul ul,
+        .typo li ul {
+            list-style: circle
+        }
+
+        .typo-table td,
+        .typo-table th,
+        .typo table caption,
+        .typo table td,
+        .typo table th {
+            border: 1px solid #ddd;
+            padding: .5em 1em;
+            color: #666
+        }
+
+        .typo-table th,
+        .typo table th {
+            background: #fbfbfb
+        }
+
+        .typo-table thead th,
+        .typo table thead th {
+            background: hsla(0, 0%, 95%, .7)
+        }
+
+        .typo table caption {
+            border-bottom: none
+        }
+
+        .typo-input,
+        .typo-textarea {
+            -webkit-appearance: none;
+            border-radius: 0
+        }
+
+        .typo-em,
+        .typo em,
+        caption,
+        legend {
+            color: #000;
+            font-weight: inherit
+        }
+
+        .typo-em {
+            position: relative
+        }
+
+        .typo-em:after {
+            position: absolute;
+            top: .65em;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            content: "\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB"
+        }
+
+        .typo img {
+            max-width: 100%
+        }
+
+        .common-content {
+            font-weight: 400;
+            color: #353535;
+            line-height: 1.75rem;
+            white-space: normal;
+            word-break: normal;
+            font-size: 1rem
+        }
+
+        .common-content img {
+            display: block;
+            max-width: 100%;
+            background-color: #eee
+        }
+
+        .common-content audio,
+        .common-content video {
+            width: 100%;
+            background-color: #eee
+        }
+
+        .common-content center,
+        .common-content font {
+            margin-top: 1rem;
+            display: inline-block
+        }
+
+        .common-content center {
+            width: 100%
+        }
+
+        .common-content pre {
+            margin-top: 1rem;
+            padding-left: 0;
+            padding-right: 0;
+            position: relative;
+            overflow: hidden
+        }
+
+        .common-content pre code {
+            font-size: .8rem;
+            font-family: Consolas, Liberation Mono, Menlo, monospace, Courier;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            overflow-x: auto
+        }
+
+        .common-content hr {
+            border: none;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-top: 1px solid #f5f5f5;
+            height: 1px;
+            background: none
+        }
+
+        .common-content b,
+        .common-content h1,
+        .common-content h2,
+        .common-content h3,
+        .common-content h4,
+        .common-content h5,
+        .common-content strong {
+            font-weight: 700
+        }
+
+        .common-content h1,
+        .common-content h2 {
+            font-size: 1.125rem;
+            margin-bottom: .45rem
+        }
+
+        .common-content h3,
+        .common-content h4,
+        .common-content h5 {
+            font-size: 1rem;
+            margin-bottom: .45rem
+        }
+
+        .common-content p {
+            font-weight: 400;
+            color: #353535;
+            margin-top: .15rem
+        }
+
+        .common-content .orange {
+            color: #ff5a05
+        }
+
+        .common-content .reference {
+            font-size: 1rem;
+            color: #888
+        }
+
+        .custom-rich-content h1 {
+            margin-top: 0;
+            font-weight: 400;
+            font-size: 15.25px;
+            border-bottom: 1px solid #eee;
+            line-height: 2.8
+        }
+
+        .custom-rich-content li,
+        .custom-rich-content p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.6
+        }
+
+        table.hljs-ln {
+            margin-bottom: 0;
+            border-spacing: 0;
+            border-collapse: collapse
+        }
+
+        table.hljs-ln,
+        table.hljs-ln tbody,
+        table.hljs-ln td,
+        table.hljs-ln tr {
+            box-sizing: border-box
+        }
+
+        table.hljs-ln td {
+            padding: 0;
+            border: 0
+        }
+
+        table.hljs-ln td.hljs-ln-numbers {
+            min-width: 15px;
+            color: rgba(27, 31, 35, .3);
+            text-align: right;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none
+        }
+
+        table.hljs-ln td.hljs-ln-code,
+        table.hljs-ln td.hljs-ln-numbers {
+            font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+            font-size: 12px;
+            line-height: 20px;
+            vertical-align: top
+        }
+
+        table.hljs-ln td.hljs-ln-code {
+            position: relative;
+            padding-right: 10px;
+            padding-left: 10px;
+            overflow: visible;
+            color: #24292e;
+            word-wrap: normal;
+            white-space: pre
+        }
+
+        video::-webkit-media-controls {
+            overflow: hidden !important
+        }
+
+        video::-webkit-media-controls-enclosure {
+            width: calc(100% + 32px);
+            margin-left: auto
+        }
+
+        ._29HP61GA_0 {
+            max-width:800px;
+            margin:0 auto;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: #353535;
+            line-height: 1.76;
+            white-space: normal;
+            word-break: normal;
+            font-size: 17px;
+            -webkit-transition: background-color .3s ease;
+            transition: background-color .3s ease
+        }
+
+        ._29HP61GA_0 .MathJax_Display {
+            overflow: auto
+        }
+
+        ._29HP61GA_0 .poster {
+            position: fixed;
+            left: -10000px;
+            top: -10000px;
+            overflow: hidden;
+            padding: 1rem;
+            background: #ececec
+        }
+
+        ._29HP61GA_0 .richcontent-pre-copy {
+            font-size: 13px;
+            color: #888;
+            position: absolute;
+            right: 1em;
+            top: .5em;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        ._29HP61GA_0 .richcontent-pre-copy .iconfont {
+            font-size: 12px;
+            margin-right: .2em
+        }
+
+        ._29HP61GA_0 a {
+            color: #fa8919;
+            border-bottom: 1px solid #fa8919
+        }
+
+        ._29HP61GA_0 img {
+            display: block;
+            max-width: 100%;
+            position: relative;
+            left: 50%;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+            background-color: #eee;
+            vertical-align: top;
+            border-radius: 0
+        }
+
+        ._29HP61GA_0 audio,
+        ._29HP61GA_0 video {
+            width: 100%;
+            background-color: #eee
+        }
+
+        ._29HP61GA_0 pre {
+            margin-top: 16px;
+            padding: 34px 0 0;
+            margin-bottom: 30px;
+            position: relative;
+            border-radius: 6px;
+            background: rgba(246, 247, 251, .749);
+            border: 0
+        }
+
+        ._29HP61GA_0 pre code {
+            font-size: 12px;
+            font-family: Consolas, Liberation Mono, Menlo, monospace, Courier;
+            display: block;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            margin-left: 16px;
+            margin-right: 16px;
+            overflow-x: scroll
+        }
+
+        ._29HP61GA_0 pre code:after {
+            content: "";
+            height: 30px;
+            width: 100%;
+            display: block
+        }
+
+        ._29HP61GA_0 hr {
+            border: none;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-top: 1px solid #f5f5f5;
+            height: 1px;
+            background: none
+        }
+
+        ._29HP61GA_0 h1,
+        ._29HP61GA_0 h2,
+        ._29HP61GA_0 h3,
+        ._29HP61GA_0 h4,
+        ._29HP61GA_0 h5 {
+            margin-bottom: 20px;
+            margin-top: 0;
+            font-weight: 700
+        }
+
+        ._29HP61GA_0 b,
+        ._29HP61GA_0 strong {
+            font-weight: 700
+        }
+
+        ._29HP61GA_0 h1 {
+            font-size: 21px
+        }
+
+        ._29HP61GA_0 h2 {
+            font-size: 20px
+        }
+
+        ._29HP61GA_0 h3 {
+            font-size: 19px
+        }
+
+        ._29HP61GA_0 h4 {
+            font-size: 18px
+        }
+
+        ._29HP61GA_0 h5 {
+            font-size: 17px
+        }
+
+        ._29HP61GA_0 center,
+        ._29HP61GA_0 p {
+            font-weight: 400;
+            color: #353535;
+            margin-top: 0;
+            margin-bottom: 30px;
+            word-break: break-word
+        }
+
+        ._29HP61GA_0 center {
+            text-align: center
+        }
+
+        ._29HP61GA_0 blockquote {
+            margin-top: 0;
+            margin-bottom: 34px;
+            border-left: 3px solid #e8e8e8;
+            padding-left: 17px;
+            color: #353535
+        }
+
+        ._29HP61GA_0 blockquote p {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+
+        ._29HP61GA_0 ol,
+        ._29HP61GA_0 ul {
+            margin-bottom: 30px
+        }
+
+        ._29HP61GA_0 ol p,
+        ._29HP61GA_0 ul p {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+
+        ._29HP61GA_0 ol {
+            list-style: decimal;
+            margin-left: 20px
+        }
+
+        ._29HP61GA_0 ul li {
+            padding-left: 17px;
+            position: relative;
+            margin-bottom: 10px
+        }
+
+        ._29HP61GA_0 ul li:after {
+            content: "";
+            height: 6px;
+            width: 6px;
+            border-radius: 50%;
+            background: #353535;
+            position: absolute;
+            top: 10px;
+            left: 0
+        }
+
+        ._29HP61GA_0 .orange {
+            color: #fa8919
+        }
+
+        ._29HP61GA_0 .reference {
+            color: #888
+        }
+
+        ._29HP61GA_0 .m-right {
+            text-align: right
+        }
+
+        ._29HP61GA_0 .m-center {
+            text-align: center;
+            display: block
+        }
+
+        ._29HP61GA_0 .m-gray {
+            color: #888
+        }
+
+        ._29HP61GA_0 .m-small {
+            font-size: 15px
+        }
+
+        ._29HP61GA_0 table.hljs-ln {
+            margin-bottom: 0;
+            border-spacing: 0;
+            border-collapse: collapse
+        }
+
+        ._29HP61GA_0 table.hljs-ln,
+        ._29HP61GA_0 table.hljs-ln tbody,
+        ._29HP61GA_0 table.hljs-ln td,
+        ._29HP61GA_0 table.hljs-ln tr {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box
+        }
+
+        ._29HP61GA_0 table.hljs-ln td {
+            padding: 0;
+            border: 0
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-numbers {
+            min-width: 15px;
+            font-size: 12px;
+            color: rgba(27, 31, 35, .3);
+            text-align: right;
+            white-space: nowrap;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-code,
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-numbers {
+            font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+            line-height: 20px;
+            vertical-align: top
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-code {
+            position: relative;
+            padding-right: 10px;
+            padding-left: 10px;
+            overflow: visible;
+            font-size: 13px;
+            color: #666;
+            word-wrap: normal;
+            white-space: pre
+        }
+
+    </style>
+</head>
+<body>
+<div class="_29HP61GA_0">
+<h1>开篇词-软件设计，应对需求规模的“算法”</h1>
+<p>你好，我是郑晔！</p><p>作为一个能把基本功能实现出来的程序员，偶尔仰望天空时，你是否这样问过自己，“我写过的代码还有没有更好的写法呢？如果有一天，我能够把它重写一遍，我该怎么做呢？”</p><p>这就是我当年问过自己的问题，因为我对自己的代码不满意：</p><ul>
+<li>我厌倦了，把各种代码堆砌在一起，然后，在出现Bug时，犹如“大家来找茬”一样在其中定位问题；</li>
+<li>我厌倦了，仅仅为了一个小需求，要在无数的地方小心翼翼地做着各种微调，还被产品经理嫌弃改得慢；</li>
+<li>我厌倦了，自己辛辛苦苦写好的代码，被别人在其他地方不经意地修改，给弄崩溃了；</li>
+<li>……</li>
+</ul><p>我四处寻找答案，直到后来，我找到了一个东西，叫做“软件设计”。在如饥似渴地学习了软件设计之后，我对做软件这件事有了全新的认识：</p><ul>
+<li>我知道了，写软件不仅要追求如何实现功能，还要考虑未来的维护和扩展；</li>
+<li>我知道了，代码不应该毫无目的地堆在那里，而是要考虑如何组织更为恰当；</li>
+<li>我知道了，原来后期遇到很多问题，只是因为前期缺乏设计而留下了隐患；</li>
+<li>……</li>
+</ul><p>如果你也曾有同样的迷茫，想破茧成蝶，欢迎你与我一起探索“软件设计”！</p><h2>关注长期变化的软件设计</h2><blockquote>
+<p>设计是为了让软件在长期更容易适应变化。</p>
+</blockquote><blockquote>
+<p>Design is there to enable you to keep changing the software easily in the long term.</p>
+</blockquote><!-- [[[read_end]]] --><blockquote>
+<p>—— Kent Beck</p>
+</blockquote><p>软件设计，是一门关注长期变化的学问。它并不是程序员的入门第一课，因为初窥编程门径的程序员首先追求的是把一个功能实现出来，他无法看到一个软件长期的变化。</p><p>或许未曾学过软件设计，但这并不妨碍你凭借一股蛮力把软件写出来。但如果你在做的是一个有生命力的软件，长期意味着什么呢？意味着会有源源不断的需求扑面而来。面对一拨又一拨的需求，你该如何应对呢？</p><p>你可以想象一下，小米加步枪的解决方案，在敌人不多的时候，你还可以应付得游刃有余，但当敌人已经漫山遍野时，你需要的是大规模杀伤性武器。而软件设计就是这个大规模杀伤性武器。</p><p>用程序员们更熟悉的排序算法为例，快速排序的平均复杂度是O(nlogn)，而插入排序是O(n^2)。所以，一般我们说快速排序比插入排序有优势。但是，这种优势只有在一定规模下才能体现出来。当数据规模很小的时候，二者差别并不明显，更有甚者，插入排序在某些情况下表现得会更好。但当数据规模很大时，快速排序的优势就非常明显了。对比两个算法的优劣，关键在于数据规模。</p><p>所以你会发现，算法和软件设计其实是一样的，二者对抗的都是规模问题，只不过，<strong>算法对抗的是数据的规模，而软件设计对抗的是需求的规模</strong>。</p><p>你现在应该理解了，为什么软件设计是一门关注长期的学问了，因为只有长期的积累，需求才会累积，规模问题才会凸显出来。<strong>软件设计，实际上就是应对需求的“算法”</strong>。</p><h2>如何学习软件设计？</h2><p>软件设计的相关知识有很多，你可能听说过一些，比如，设计模式、领域驱动设计等等。但是，分别学习这些知识时，总有一些令人困惑的地方。比方说，学了那么多设计模式，你能用上的却没有几个；领域驱动设计中的概念那么多，你都不知道该从哪学起。</p><p>你的困惑我也有过，我花了很长时间才知道，我们困惑的，并不是这些知识本身，而是在于缺乏一个整体结构将它们贯穿起来。比如，多态，这个词在你看来只是一个普通的语法规则，但只有你懂得，它是把变的部分和不变的部分隔离开来，你才能理解开放封闭、接口隔离和依赖倒置这些设计原则的价值所在，理解了这些原则，才能知道某些设计模式只是这些原则在具体场景下的应用。</p><p>也就是说，<strong>软件设计学习的难度，不在于一招一式，而在于<strong><strong>融会贯通</strong></strong>。</strong></p><p>所以，在这个课程中，我会尝试将软件设计的相关知识贯通起来，帮你建立起对软件设计的整体认知。</p><p>那具体要从哪里入手呢？其实对于“软件设计”，我们可以将其划分为两个维度：<strong>“了解现有软件的设计”和“自己设计一个软件”。</strong></p><p>了解现有软件的设计，是能够在这个软件上继续添砖加瓦的前提。事实上，无论是初入职场，还是加入一个新公司，在工作初期，我们能做的往往也只是添砖加瓦，这时候如果能快速了解现有软件的设计，就可以尽快投入工作中去。此外，当你想从一个开源项目上汲取养分时，了解其背后的设计，也是一种不可或缺的能力。</p><p>大多数人在理解一个软件时，总会出现一个问题，就是眉毛胡子一把抓，直奔代码细节而去。这样不仅增加了我们的时间成本，还会迷失在细节之中，只见树木不见森林。所以在这个课程中，我会教你一个快速了解现有软件设计的方法，那就是抓住这个软件最核心的三个部分：<strong>模型、接口和实现</strong>。</p><p>同时我会以一些开源项目为案例，教你如何用这个方法去解读它们的设计，比如：</p><ul>
+<li>我们怎样理解Spring DI容器模型，它的模型怎样有效解决了其面对的问题；</li>
+<li>如何理解Ruby on Rails的接口，我们可以从其接口设计中借鉴哪些内容；</li>
+<li>Kafka的实现有哪些独特之处，实现的诸多细节中，我们应该关注哪些内容。</li>
+</ul><p>通过对这些案例的解读，你会切实地感受到融会贯通的好处，真正做到快速了解一个软件的设计。</p><p>慢慢地，当你在业务和技能上有了一定的积累，你将有机会做属于自己的设计。你负责的工作内容也将会从一个小功能到一个完整的小业务，从到一个模块到一个系统。随着你的能力不断提升，你负责的内容会逐渐增多，复杂度逐步升级，对你设计能力的要求也会随之攀升。</p><p>这时，你就需要掌握一些软件设计的基础知识。我会把软件设计中最重要的部分交付给你，包括：</p><ul>
+<li>程序设计语言；</li>
+<li>编程范式；</li>
+<li>设计原则；</li>
+<li>设计模式；</li>
+<li>设计方法。</li>
+</ul><p><strong>程序设计语言</strong>，是软件设计落地的基础。任何设计都依赖程序设计语言来实现。但任何语言也都有自己的局限，<strong>我将带领你横跨语言学语言，让你不再局限于某一种语言，<strong><strong>而是</strong></strong>择其善者而从之，更好地落地你的设计。</strong></p><p><strong>编程范式</strong>，是代码编写的风格，决定着你在设计时可以用到哪些元素：是模块、是对象，还是函数。在不同层次的设计中，选择不同的编程范式已经成为今天开发的主流。在这个主题下，我选择了几个最主流的编程范式，包括结构化编程、面向对象和函数式编程，帮你建立起软件设计的根基。</p><p><strong>设计原则</strong>，是你在进入到具体设计的层面时，可以用来评判自己工作结果的一个衡量标准。我会给你介绍面向对象的主流设计原则：SOLID原则。一来面向对象是当今的主流开发方式，二来SOLID原则也是比较成体系的设计原则，它本身也在不断发展。</p><p><strong>设计模式</strong>，是设计原则在具体场景下的应用。不过，这个话题展开之后，内容会非常多，而且有很多书和课程都讲到了，所以，我并不准备把它当作重点。但我会和你分享一些学习设计模式的心得，帮助你将设计模式的相关知识贯穿起来。</p><p>当你手里有了诸多工具之后，接下来就需要用这些工具去做自己的设计了。这就轮到<strong>设计方法</strong>登场了。</p><p>我会用<a href="https://time.geekbang.org/column/intro/100037301">领域驱动设计</a>（也就是 DDD，Domain Driven Design）进行讲解，这是目前最为完整、有效的应对复杂业务场景的设计方法，包括了从如何识别概念到如何建立模型。在这个课程中，我准备将DDD的基础知识贯穿起来，做一个结构性的介绍。你会发现，有了前面知识的铺垫，DDD理解起来一点都不困难。</p><p>有了基础知识，在课程最后，我们还会在<strong>巩固篇</strong>中操练一下，将学到的软件知识应用起来。在这个模块中，我会结合自己的开源项目Moco，来讲讲如何设计一个程序库；还会借着一个数据采集的项目，谈谈如何构建起一个可扩展的模型。另外，因为大多数人在实际工作中面对的都是一个既有的项目，所以，我还会讲讲，如何对既有项目做设计上的改进。</p><p><img src="https://static001.geekbang.org/resource/image/62/31/62edbd37324ea5b7af4da7c15b4d9431.jpg" alt=""></p><h2>写在最后</h2><p>最后，再自我介绍一下。我叫郑晔，一个从业近二十年的程序员，《<a href="https://time.geekbang.org/column/intro/100022301">10x程序员工作法</a>》专栏作者。很高兴又回到极客时间，和你分享我对软件设计的理解。</p><p>如果说《10x 程序员工作法》这门课是在告诉你要做正确的事，做有价值的需求，别把时间浪费在不该做的事情上，那《软件设计之美》这门课就是告诉你如何把事做对，如何建立有效的模型，划清模块之间的边界，所以，二者可谓一脉相承。</p><p>不想当将军的士兵不是一个好士兵，不想做设计的程序员不是一个好程序员。写程序的人谁不想操刀一个大型的系统，但不懂软件设计的人能摆弄的代码规模是有限的，而这也限定了一个人的成长高度。</p><p>学习软件设计，是让你的把控能力从一段代码扩展到一个模块，再扩展到一个子系统，再扩展到一个大系统的必备手艺，是程序员从“家常菜厨师”到“大厨”的进阶之路。</p><p>不过，你也不必把软件设计想象得过于高大上，很多设计理念既可以用来设计一个系统，也可以运用于日常开发之中，它就在你的身边。今天多学习一点设计，明天就能多发现一个问题。</p><p>如果你曾与我一样，走入过软件开发的迷途；如果你希望自己的软件开发能力再上层楼；或者你只是对软件设计充满好奇，那么，欢迎加入我的课程。也欢迎你把自己的现状和预期写在留言区，当课程结束时，让我们共同见证你的成长！</p><p>你准备好了吗？让我们正式开启软件设计之旅，一起领略软件设计的美妙！</p><h2>精选留言：</h2>
+        <ul>
+        
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            Kǎfκã²⁰²⁰  2020-05-25 20:10:00
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            欢迎郑老师回来 [2赞]
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            HackMSF  2020-05-26 01:06:53
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            当我看到这段时眼前一亮，因为我当前就刚进入一家公司做BI，我入职两个星期发现我对当前规模的复杂度的把控能力是不足的，具体表现就是容易陷入细节，不知道该怎样搞懂系统的设计，我很期待。<br><br>“大多数人在理解一个软件时，总会出现一个问题，就是眉毛胡子一把抓，直奔代码细节而去。这样不仅增加了我们的时间成本，还会迷失在细节之中，只见树木不见森林。所以在这个课程中，我会教你一个快速了解现有软件设计的方法，那就是抓住这个软件最核心的三个部分：模型、接口和实现。” 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            Jxin  2020-05-25 22:35:05
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            1.欢迎郑老师回来！！<br>2.去年学习10x时，菜得很，受益良多。今年在谈软件设计，已有不少实践，希望能真正参与到专栏中来，而不再只是仰望。<br>3.目前罗列的内容，知识面大了。相信郑老师主心骨应该还是串联这些个内容的骨干网络。但，细节与骨干实在不好把握，毕竟篇幅有限。有些许担忧。<br>4.望再创佳绩。共同进步。 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            Aliliin  2020-05-25 21:38:39
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            昨天看到一个段子。问：你去年写了十万行代码，今年怎么写的这么少？<br>答：因为我学会了使用 for 条件语句。😅 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            Geek_bdd0e7  2020-05-25 19:12:20
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            我一直很想学习一下在编程中如何从定义到属性到定理到模型再到模型间的关系，最后从模块构建一个系统。<br><br>当中有令人兴奋的地方。 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;            line-height:1.2">
+            Geek_46c5dd  2020-05-25 17:56:03
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;            word-break:break-all;line-height:1.6">
+            需求的规模是增长的，当规模还不大的时候，需要用到设计吗？是不是crud就可以了？ 
+        </div>
+        
+    </div>
+</li>
+            </ul>
+</div>
+</body>
+</html>
